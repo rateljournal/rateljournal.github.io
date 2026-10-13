@@ -1,0 +1,194 @@
+/* Ratel journal - reproduction de l'ancien thème (Twenty Twenty-Four / noblogs) */
+
+:root {
+  --noir: #000;
+  --blanc: #fff;
+  --texte: #111;
+  --largeur: 900px;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--noir); }
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--texte);
+  /* Motif noir et blanc : une image collée à gauche, une à droite (fixes au défilement) */
+  background-color: var(--noir);
+  background-image: url("images/fond-gauche.jpg"), url("images/fond-droite.jpg");
+  background-position: left top, right top;
+  background-size: auto 100%, auto 100%;
+  background-repeat: no-repeat, no-repeat;
+  background-attachment: fixed, fixed;
+}
+
+.site {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  background: var(--blanc);
+}
+
+/* ---------- Bandeau ---------- */
+.bandeau { display: block; background: var(--noir); }
+.bandeau img { display: block; width: 100%; height: auto; }
+
+/* ---------- Menu noir ---------- */
+.menu {
+  background: var(--noir);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 2.5rem;
+  padding: 0;
+}
+.menu a {
+  color: var(--blanc);
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.75rem 1.1rem;
+  transition: background 0.15s, color 0.15s;
+}
+/* Survol : case blanche, texte noir, sur toute la hauteur du menu */
+.menu a:hover,
+.menu a:focus-visible,
+.menu a[aria-current="page"] {
+  background: var(--blanc);
+  color: var(--noir);
+}
+
+
+/* ---------- Mise en page ---------- */
+.contenu {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 2rem;
+  padding: 2rem 2rem 3rem;
+}
+.contenu.pleine { grid-template-columns: minmax(0, 1fr); }
+
+main { min-width: 0; }
+
+main h1, main h2 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin: 1.2rem 0 1rem;
+}
+main h2 a, main h1 a {
+  color: inherit;
+  text-decoration: none;
+  padding: 0.1em 0.4em;
+  margin: 0 -0.4em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background 0.15s, color 0.15s;
+}
+/* Survol : texte blanc sur fond noir */
+main h2 a:hover, main h1 a:hover,
+main h2 a:focus-visible, main h1 a:focus-visible {
+  background: var(--noir);
+  color: var(--blanc);
+  text-decoration: none;
+}
+
+main p { margin: 0 0 1.1rem; }
+main a { color: inherit; }
+
+hr { border: 0; border-top: 1px solid var(--noir); margin: 2.5rem 0; }
+
+.numero { text-align: center; margin: 0 0 2rem; }
+.numero img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+.numero figcaption { font-size: 0.8rem; font-style: italic; }
+
+.poeme { white-space: pre-line; }
+.signature { font-style: italic; }
+
+/* ---------- Colonne de droite ---------- */
+aside label { display: block; font-size: 0.9rem; margin-bottom: 0.3rem; }
+.recherche { display: flex; }
+.recherche input {
+  flex: 1; min-width: 0;
+  border: 3px solid var(--noir);
+  padding: 0.5rem;
+  font: inherit;
+  background: var(--blanc);
+}
+.recherche button {
+  border: 0;
+  background: #111;
+  color: var(--blanc);
+  padding: 0 0.9rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.recherche button:hover { background: #444; }
+
+.reseaux { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.reseaux img { width: 24px; height: 24px; display: block; }
+.reseaux a { display: inline-block; }
+.reseaux a:hover img { opacity: 0.6; }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 760px) {
+  .contenu { grid-template-columns: 1fr; padding: 1.2rem; }
+  .menu { gap: 0 1.5rem; }
+}
+
+/* ---------- Pages Numéros / Contact / A propos ---------- */
+.centre { text-align: center; }
+.sommaire {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem auto 0;
+  max-width: 38rem;       /* force les longs titres à passer sur 2 lignes */
+  text-align: center;
+}
+.sommaire li {
+  margin: 0 0 1rem;
+  font-weight: bold;
+  font-style: italic;
+}
+.sommaire a {
+  text-decoration: none;
+  padding: 0.1em 0.4em;
+  margin: 0 -0.4em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.sommaire a:hover,
+.sommaire a:focus-visible {
+  background: var(--noir);
+  color: var(--blanc);
+}
+.fleur { display: block; width: 90px; max-width: 100%; height: auto; margin: 2rem auto 0; }
+/* Titres centrés sur les pages Numéros, Contact et A propos */
+.contenu.pleine main h1 {
+  text-align: center;
+}
+.contenu.pleine main h2 {
+  text-align: center;
+  font-size: 2.6rem;
+  line-height: 1.1;
+}
+.nav-articles {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  margin: 0 0 2rem;
+  font-size: 0.9rem;
+}
+.nav-articles a { text-decoration: underline; }
+.nav-articles a:hover, .nav-articles a:focus-visible {
+  background: var(--noir);
+  color: var(--blanc);
+}
+/* ---------- Pied de page ---------- */
+.pied {
+  background: var(--noir);
+  color: var(--blanc);
+  min-height: 125px;
+  padding: 1rem 2rem;
+}
