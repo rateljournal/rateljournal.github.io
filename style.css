@@ -219,7 +219,7 @@ img { max-width: 100%; height: auto; }
 .numero { max-width: 100%; }
 .numero img {
   width: 100%;
-  max-width: 300px;
+  max-width: 600px;
   height: auto;
   display: block;
   margin: 0 auto;
