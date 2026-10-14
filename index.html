@@ -91,13 +91,12 @@ A un patron ?</p>
     </main>
 
     <aside>
-      <form class="recherche" role="search" onsubmit="rechercher(event)">
-        <div style="flex:1;min-width:0">
-          <label for="q">Rechercher</label>
-          <input id="q" type="search" name="q">
-        </div>
-     
-      </form>
+     <form class="recherche" role="search" action="recherche.html" method="get">
+  <div style="flex:1;min-width:0">
+    <label for="q">Rechercher</label>
+    <input id="q" type="search" name="q">
+  </div>
+</form>
       <div class="reseaux">
         <a href="https://www.instagram.com/journalratel/" aria-label="Instagram"><img src="images/Instagram_icon.png" alt="Instagram"></a>
         <a href="https://x.com/journalratel" aria-label="Twitter / X"><img src="images/Logo_of_Twitter.svg_.png" alt="Twitter / X"></a>
@@ -107,15 +106,5 @@ A un patron ?</p>
 <footer class="pied">Ratel – journal anarchiste apériodique</footer>
 </div>
 
-<script>
-  // Recherche : un site statique n'a pas de moteur interne, on passe par DuckDuckGo limité à ce site.
-  function rechercher(e) {
-    e.preventDefault();
-    var q = document.getElementById('q').value.trim();
-    if (!q) return;
-    window.location.href = 'https://duckduckgo.com/?q=' +
-      encodeURIComponent(q + ' site:' + window.location.hostname);
-  }
-</script>
 </body>
 </html>
