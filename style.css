@@ -202,3 +202,14 @@ aside label { display: block; font-size: 0.9rem; margin-bottom: 0.3rem; }
 }
 .contenu { flex: 1; }
 .contenu.pleine .numero img { max-width: 600px; }
+/* ---------- Page de résultats de recherche ---------- */
+.recherche-page { max-width: 30rem; margin: 0 auto 1.5rem; }
+.recherche-page input { flex: 1; }
+.recherche-page button { padding: 0 1.2rem; font-family: inherit; font-size: 0.95rem; }
+.resultats { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+.resultats li { margin-bottom: 1.8rem; }
+.resultats h2 { font-size: 1.2rem; margin: 0 0 0.3rem; }
+.resultats h2 a { text-decoration: none; padding: 0.1em 0.4em; margin: 0 -0.4em; }
+.resultats h2 a:hover { background: var(--noir); color: var(--blanc); }
+.resultats p { margin: 0; font-size: 0.95rem; }
+mark { background: #000; color: #fff; padding: 0 0.15em; }
