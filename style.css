@@ -192,3 +192,11 @@ aside label { display: block; font-size: 0.9rem; margin-bottom: 0.3rem; }
   min-height: 125px;
   padding: 1rem 2rem;
 }
+/* Le site remplit toute la hauteur de l'écran, footer collé en bas */
+.site {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.contenu { flex: 1; }
