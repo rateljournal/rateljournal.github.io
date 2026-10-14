@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recherche – Ratel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="site">
+  <a class="bandeau" href="index.html"><img src="images/banniere.png" alt="Ratel – journal anarchiste apériodique"></a>
+  <nav class="menu" aria-label="Menu principal">
+    <a href="index.html">Accueil</a>
+    <a href="numeros.html">Numéros</a>
+    <a href="contact.html">Contact</a>
+    <a href="apropos.html">A propos</a>
+  </nav>
+  <div class="contenu pleine">
+    <main>
+      <h1>Recherche</h1>
+      <form class="recherche recherche-page" role="search" action="recherche.html" method="get">
+        <input id="q" type="search" name="q" aria-label="Rechercher" autofocus>
+        <button type="submit">Rechercher</button>
+      </form>
+      <p id="etat" class="centre"></p>
+      <ul id="resultats" class="resultats"></ul>
+    </main>
+  </div>
+  <footer class="pied"></footer>
+</div>
+
+<script>
+(function () {
+  // Pages dans lesquelles chercher (ajoutez-en ici si vous créez de nouvelles pages)
+  var PAGES = ['edito.html', 'guerre.html', 'frontieres.html', 'betail.html',
+               'temps-perdu.html', 'numeros.html', 'apropos.html', 'contact.html'];
+
+  var params = new URLSearchParams(window.location.search);
+  var requete = (params.get('q') || '').trim();
+  var champ = document.getElementById('q');
+  var etat = document.getElementById('etat');
+  var liste = document.getElementById('resultats');
+  champ.value = requete;
+
+  // Ignore majuscules et accents (é = e, œ reste œ)
+  function norm(s) {
+    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  if (!requete) { etat.textContent = 'Saisissez un mot à chercher.'; return; }
+
+  var termes = norm(requete).split(/\s+/).filter(Boolean);
+  etat.textContent = 'Recherche en cours…';
+
+  function compte(texteNorm, terme) {
+    var n = 0, i = texteNorm.indexOf(terme);
+    while (i !== -1) { n++; i = texteNorm.indexOf(terme, i + terme.length); }
+    return n;
+  }
+
+  // Construit un extrait avec les mots trouvés surlignés
+  function extrait(texte, texteNorm) {
+    var pos = texteNorm.indexOf(termes[0]);
+    var debut = Math.max(0, pos - 70);
+    var fin = Math.min(texte.length, pos + 150);
+    var morceau = texte.slice(debut, fin);
+    var morceauNorm = texteNorm.slice(debut, fin);
+    var marques = new Array(morceau.length).fill(false);
+    termes.forEach(function (t) {
+      var i = morceauNorm.indexOf(t);
+      while (i !== -1) {
+        for (var k = i; k < i + t.length; k++) marques[k] = true;
+        i = morceauNorm.indexOf(t, i + t.length);
+      }
+    });
+    var frag = document.createDocumentFragment();
+    if (debut > 0) frag.appendChild(document.createTextNode('… '));
+    var courant = '', marque = false;
+    function vider() {
+      if (!courant) return;
+      if (marque) { var m = document.createElement('mark'); m.textContent = courant; frag.appendChild(m); }
+      else frag.appendChild(document.createTextNode(courant));
+      courant = '';
+    }
+    for (var j = 0; j < morceau.length; j++) {
+      if (marques[j] !== marque) { vider(); marque = marques[j]; }
+      courant += morceau[j];
+    }
+    vider();
+    if (fin < texte.length) frag.appendChild(document.createTextNode(' …'));
+    return frag;
+  }
+
+  Promise.all(PAGES.map(function (url) {
+    return fetch(url).then(function (r) { return r.ok ? r.text() : null; })
+                     .then(function (html) { return html ? { url: url, html: html } : null; })
+                     .catch(function () { return null; });
+  })).then(function (pages) {
+    var resultats = [];
+    pages.forEach(function (p) {
+      if (!p) return;
+      var doc = new DOMParser().parseFromString(p.html, 'text/html');
+      var main = doc.querySelector('main');
+      if (!main) return;
+      var nav = main.querySelector('.nav-articles'); if (nav) nav.remove();
+      var titreEl = main.querySelector('h1, h2');
+      var titre = titreEl ? titreEl.textContent.trim() : p.url;
+      var texte = main.textContent.replace(/\s+/g, ' ').trim();
+      var texteNorm = norm(texte);
+      var score = 0, tous = true;
+      termes.forEach(function (t) {
+        var c = compte(texteNorm, t);
+        if (!c) tous = false;
+        score += c;
+      });
+      if (tous) resultats.push({ url: p.url, titre: titre, texte: texte, texteNorm: texteNorm, score: score });
+    });
+
+    resultats.sort(function (a, b) { return b.score - a.score; });
+
+    if (!resultats.length) { etat.textContent = 'Aucun résultat pour « ' + requete + ' ».'; return; }
+    etat.textContent = resultats.length + (resultats.length > 1 ? ' résultats' : ' résultat') + ' pour « ' + requete + ' »';
+
+    resultats.forEach(function (r) {
+      var li = document.createElement('li');
+      var h = document.createElement('h2');
+      var a = document.createElement('a');
+      a.href = r.url; a.textContent = r.titre;
+      h.appendChild(a);
+      var p = document.createElement('p');
+      p.appendChild(extrait(r.texte, r.texteNorm));
+      li.appendChild(h); li.appendChild(p);
+      liste.appendChild(li);
+    });
+  });
+})();
+</script>
+</body>
+</html>
